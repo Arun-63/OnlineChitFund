@@ -6,6 +6,6 @@ CREATE TABLE CHIT (
     fundsize integer not NULL,
     nopeople integer not NULL,
     fdate text NOT NULL,
-    tdate text NOT NULL,
+    tdate text,
     pdate text NOT NULL
 )
