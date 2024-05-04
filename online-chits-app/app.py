@@ -3,6 +3,7 @@ from flask_login import login_user, LoginManager, UserMixin, login_required, cur
 import sqlite3
 import time
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime as dt
 
 
 app = Flask(__name__)
@@ -26,6 +27,24 @@ def get_db_connection():
 def index():
     return render_template('login.html')
 
+@app.route('/createChit', methods=['POST'])
+@login_required
+def createChit():
+    CFName = request.form.get('CFName')
+    CFSize = request.form.get('CFSize')
+    NPeople = request.form.get('NPeople')
+    FromDate = request.form.get('FromDate')
+    PDate = str(dt.today())
+    conn = get_db_connection()
+    conn.execute("INSERT INTO CHIT (name,owner,fundsize,nopeople,fdate,pdate) VALUES (?, ?, ?, ?, ?, ?)",
+        (CFName,current_user.id,CFSize,NPeople,FromDate,PDate)
+            )
+    conn.commit()
+
+    xyz = conn.execute("SELECT * FROM CHIT").fetchall()
+    print(xyz)
+    conn.close()
+    return redirect(url_for('home'))
 
 @app.route('/signup', methods=['POST'])
 def signup():
